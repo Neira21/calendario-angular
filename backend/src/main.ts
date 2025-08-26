@@ -12,7 +12,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Global validation pipe
+  // Global validation pipe para seguridad y validación de datos
   app.useGlobalPipes(new ValidationPipe());
 
   // Swagger configuration

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 //import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -25,21 +25,24 @@ import { ActivityService } from './services/activity.service';
 })
 export class App {
   title = 'Angular Calendar - Agenda de Actividades';
-  selectedActivity?: Activity;
-  selectedTabIndex = 1; // Start with calendar view
+  selectedActivity?: Activity; // Actividad seleccionada en caso para editar
+  // Start with ActivityFormComponent
+  selectedTabIndex = 1; //(0-> Form | 1-> Calendar)
 
   @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
 
-  constructor(private snackBar: MatSnackBar, private activityService: ActivityService) {}
+  private snackBar = inject(MatSnackBar);
+  private activityService = inject(ActivityService);
 
   onActivitySaved(activity: Activity) {
-    this.snackBar.open('Actividad guardada exitosamente', 'Cerrar', {
+    // Guardar la actividad y mostrar notificación,
+    this.snackBar.open(`Actividad guardada exitosamente: ${activity.title}`, 'Cerrar', {
       duration: 3000,
     });
     this.selectedActivity = undefined;
-    this.selectedTabIndex = 1; // Switch to calendar view
+    this.selectedTabIndex = 1; // Cambia a Vista de Calendario al guardar
 
-    // Refresh calendar after a short delay
+    // Esto refresca el calendario después de un pequeño retraso para asegurar que la actividad sea visible en el calendario
     setTimeout(() => {
       if (this.calendarComponent) {
         this.calendarComponent.refreshCalendar();
@@ -47,24 +50,28 @@ export class App {
     }, 500);
   }
 
+  // Método para obtener la actividad y tenerlo en app.component.ts
   onActivitySelected(activity: Activity) {
-    this.selectedActivity = { ...activity }; // Create a copy
-    this.selectedTabIndex = 0; // Switch to form view
+    this.selectedActivity = { ...activity }; // Crea una copia en selected Activity
+    this.selectedTabIndex = 0; // Cambia a formulario para editar
   }
 
+  // Método para manejar la selección de una fecha en el calendario
   onDateSelected(date: Date) {
     this.selectedActivity = {
       title: '',
       date: date.toISOString(),
     };
-    this.selectedTabIndex = 0; // Switch to form view
+    this.selectedTabIndex = 0; // Cambia a formulario para crear
   }
 
+  // Cancela el formulario y reedirige al calendario
   onFormCancelled() {
     this.selectedActivity = undefined;
-    this.selectedTabIndex = 1; // Switch to calendar view
+    this.selectedTabIndex = 1; // Cambia a Vista de Calendario
   }
 
+  // Borrar la actividad
   onDeleteActivity(activity: Activity) {
     if (activity.id && confirm('¿Estás seguro de que quieres eliminar esta actividad?')) {
       this.activityService.deleteActivity(activity.id).subscribe({

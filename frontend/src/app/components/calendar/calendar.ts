@@ -10,15 +10,9 @@ import { ActivityService } from '../../services/activity.service';
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule
-  ],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './calendar.html',
-  styleUrl: './calendar.scss'
+  styleUrl: './calendar.scss',
 })
 export class CalendarComponent implements OnInit {
   @Output() activitySelected = new EventEmitter<Activity>();
@@ -28,8 +22,18 @@ export class CalendarComponent implements OnInit {
   activities: Activity[] = [];
   calendarDays: any[] = [];
   monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
   ];
   dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
@@ -59,7 +63,7 @@ export class CalendarComponent implements OnInit {
           date: new Date(currentDay),
           isCurrentMonth: currentDay.getMonth() === month,
           isToday: this.isSameDay(currentDay, new Date()),
-          activities: [] as Activity[]
+          activities: [] as Activity[],
         };
         weekDays.push(dayInfo);
         currentDay.setDate(currentDay.getDate() + 1);
@@ -72,30 +76,32 @@ export class CalendarComponent implements OnInit {
     const startOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
     const endOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0);
 
-    this.activityService.getActivities(
-      startOfMonth.toISOString().split('T')[0],
-      endOfMonth.toISOString().split('T')[0]
-    ).subscribe({
-      next: (activities) => {
-        this.activities = activities;
-        this.assignActivitiesToDays();
-      },
-      error: (error) => console.error('Error loading activities:', error)
-    });
+    this.activityService
+      .getActivities(
+        startOfMonth.toISOString().split('T')[0],
+        endOfMonth.toISOString().split('T')[0]
+      )
+      .subscribe({
+        next: (activities) => {
+          this.activities = activities;
+          this.assignActivitiesToDays();
+        },
+        error: (error) => console.error('Error loading activities:', error),
+      });
   }
 
   assignActivitiesToDays() {
     // Clear previous activities
-    this.calendarDays.forEach(week => {
+    this.calendarDays.forEach((week) => {
       week.forEach((day: any) => {
         day.activities = [];
       });
     });
 
     // Assign activities to days
-    this.activities.forEach(activity => {
+    this.activities.forEach((activity) => {
       const activityDate = new Date(activity.date);
-      this.calendarDays.forEach(week => {
+      this.calendarDays.forEach((week) => {
         week.forEach((day: any) => {
           if (this.isSameDay(day.date, activityDate)) {
             day.activities.push(activity);
@@ -127,9 +133,11 @@ export class CalendarComponent implements OnInit {
   }
 
   private isSameDay(date1: Date, date2: Date): boolean {
-    return date1.getDate() === date2.getDate() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getFullYear() === date2.getFullYear();
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
   }
 
   refreshCalendar() {

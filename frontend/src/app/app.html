@@ -6,6 +6,11 @@
   <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="full-height">
     <mat-tab label="Nueva Actividad">
       <div class="tab-content">
+        <!--
+        activity input
+        activitySaved es un evento que se emite cuando se guarda la actividad (output)
+        cancelled es un evento que se emite cuando se cancela el formulario (output)
+         -->
         <app-activity-form
           [activity]="selectedActivity"
           (activitySaved)="onActivitySaved($event)"
@@ -17,6 +22,10 @@
 
     <mat-tab label="Calendario">
       <div class="tab-content">
+        <!--
+          activitySelected es un evento que se emite cuando se selecciona una actividad (output)
+          dateSelected es un evento que se emite cuando se selecciona una fecha (output)
+        -->
         <app-calendar
           (activitySelected)="onActivitySelected($event)"
           (dateSelected)="onDateSelected($event)"

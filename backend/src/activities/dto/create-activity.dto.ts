@@ -18,7 +18,7 @@ export class CreateActivityDto {
   @ApiPropertyOptional({
     description: 'Descripción detallada de la actividad',
     example:
-      'Revisión de avances del proyecto y planificación de la siguiente semana',
+      'Revisión de avances del proyecto y planificación de próximas tareas.',
   })
   @IsString()
   @IsOptional()
@@ -26,7 +26,7 @@ export class CreateActivityDto {
 
   @ApiProperty({
     description: 'Fecha y hora de la actividad',
-    example: '2024-08-24T15:30:00.000Z',
+    example: '2024-08-30T15:30:00.000Z',
   })
   @IsDateString()
   date: string;

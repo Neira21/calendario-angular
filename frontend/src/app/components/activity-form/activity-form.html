@@ -1,17 +1,21 @@
 <mat-card class="activity-form-card">
   <mat-card-header>
-    <mat-card-title>{{ 'Nueva' }} Actividad</mat-card-title>
+    <mat-card-title>{{ activity && activity.id ? 'Editar' : 'Nueva' }} Actividad</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="activityForm" class="activity-form">
+    <form [formGroup]="activityForm" class="activity-form" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline">
         <mat-label>Título</mat-label>
         <input matInput formControlName="title" placeholder="Ingresa el título de la actividad" />
+
+        @if(title?.hasError('required')){
         <mat-error *ngIf="title?.hasError('required')"> El título es obligatorio </mat-error>
+        } @if(title?.hasError('minlength')){
         <mat-error *ngIf="title?.hasError('minlength')">
           El título debe tener al menos 3 caracteres
         </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -29,7 +33,10 @@
         <input matInput [matDatepicker]="picker" formControlName="date" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="date?.hasError('required')"> La fecha es obligatoria </mat-error>
+        @if(date?.hasError('required')){
+        <mat-error> La fecha es obligatoria </mat-error>
+
+        }
       </mat-form-field>
 
       <div class="form-actions">
@@ -39,8 +46,11 @@
           type="submit"
           [disabled]="!activityForm.valid || isLoading"
         >
-          <span *ngIf="isLoading">Guardando...</span>
-          <span *ngIf="!isLoading">{{ activity ? 'Actualizar' : 'Crear' }}</span>
+          @if(isLoading){
+          <span>Guardando...</span>
+          } @if(!isLoading){
+          <span>{{ activity && activity.id ? 'Actualizar' : 'Crear' }}</span>
+          }
         </button>
         <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">
           Cancelar

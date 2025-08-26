@@ -2,11 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
-
 @Injectable()
 export class ActivitiesService {
   constructor(private prisma: PrismaService) {}
-
   async create(createActivityDto: CreateActivityDto) {
     return this.prisma.activity.create({
       data: {
