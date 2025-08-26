@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <span>{{ title }}</span>
+</mat-toolbar>
+
+<div class="app-container">
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="full-height">
+    <mat-tab label="Nueva Actividad">
+      <div class="tab-content">
+        <app-activity-form
+          [activity]="selectedActivity"
+          (activitySaved)="onActivitySaved($event)"
+          (cancelled)="onFormCancelled()"
+        >
+        </app-activity-form>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Calendario">
+      <div class="tab-content">
+        <app-calendar
+          (activitySelected)="onActivitySelected($event)"
+          (dateSelected)="onDateSelected($event)"
+        >
+        </app-calendar>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<!-- <router-outlet /> -->

@@ -1,0 +1,66 @@
+<mat-card class="calendar-card">
+  <mat-card-header class="calendar-header">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="previousMonth()"
+      aria-label="Mes anterior"
+      class="nav-button"
+    >
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      <span class="button-text">Anterior</span>
+    </button>
+    <mat-card-title class="month-title">
+      {{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}
+    </mat-card-title>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="nextMonth()"
+      aria-label="Mes siguiente"
+      class="nav-button"
+    >
+      <span class="button-text">Siguiente</span>
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="calendar">
+      <!-- Header con días de la semana -->
+      <div class="calendar-header-days">
+        <div class="day-header" *ngFor="let dayName of dayNames">
+          {{ dayName }}
+        </div>
+      </div>
+
+      <!-- Semanas del calendario -->
+      <div class="calendar-weeks">
+        <div class="calendar-week" *ngFor="let week of calendarDays">
+          <div
+            class="calendar-day"
+            *ngFor="let day of week"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.today]="day.isToday"
+            [class.has-activities]="day.activities.length > 0"
+            (click)="onDayClick(day)"
+          >
+            <div class="day-number">{{ day.date.getDate() }}</div>
+            <div class="activities" *ngIf="day.activities.length > 0">
+              <div
+                class="activity-item"
+                *ngFor="let activity of day.activities; trackBy: trackByActivityId"
+                [matTooltip]="
+                  activity.title + (activity.description ? ': ' + activity.description : '')
+                "
+                (click)="onActivityClick($event, activity)"
+              >
+                <span class="activity-title">{{ activity.title }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
